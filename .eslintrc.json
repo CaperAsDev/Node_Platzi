@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "eslint-config-standard",
+    "prettier"
+  ],
+  "env": {
+    "jest": true
+  }
+}
