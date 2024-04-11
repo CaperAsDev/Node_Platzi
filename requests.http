@@ -1,0 +1,15 @@
+###
+GET http://localhost:3000/api/v1/characters
+
+###
+POST http://localhost:3000/api/v1/characters
+Content-Type: application/json
+
+{
+  "name": "Ashley",
+  "race": "Elf",
+  "nickname": "Ash",
+  "age": 1000,
+  "favoriteColor": "Ocre",
+  "heigth": 180
+}
