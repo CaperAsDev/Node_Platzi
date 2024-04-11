@@ -4,9 +4,9 @@ import CharacterService from '../services/characters.service.js'
 const router = express.Router()
 const service = new CharacterService();
 
-router.get('/', (req, res, next)=>{
+router.get('/', async (req, res, next)=>{
   try {
-    const characters = service.findAll()
+    const characters = await service.findAll()
     res.json(characters)
 
   } catch (error) {

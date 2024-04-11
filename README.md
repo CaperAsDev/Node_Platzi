@@ -9,7 +9,9 @@
 # Clean architecture
 
 ## Services:
-Business logic
+Business logic:
+- One service per Entity
 
 ## Libraries:
-Connection to Data
+Connection to Data:
+- postgres: instal pg to connect node with postgresql db

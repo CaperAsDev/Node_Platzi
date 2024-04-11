@@ -1,7 +1,11 @@
 import  boom  from "@hapi/boom";
+import client from '../libs/postgres.js'
+import sequelize from "../libs/sequelize.js";
 
 class CharacterService {
   constructor(){
+    this.pool = client
+    this.pool.on('error', (err)=> console.log(err))
     this.characters = [
       {
         id:1,
@@ -22,8 +26,10 @@ class CharacterService {
     ]
   }
 
-  findAll(){
-    return this.characters
+  async findAll(){
+    const data = await sequelize.query('SELECT * FROM tasks')
+    console.log(data)
+    return data
   }
 
   findOne({id}){
