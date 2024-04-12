@@ -1,3 +1,5 @@
+import { ValidationError } from "sequelize";
+
 function logError(err, req, res, next) {
   console.error(err);
   next(err);
@@ -6,6 +8,7 @@ function logError(err, req, res, next) {
 function errorHandler(err, req, res, next){
   res.status(500).json({message: err.message, stack: err.stack})
 }
+
 function boomErrorHandler(err, req, res, next){
   if(err.isBoom){
     const { output } = err
@@ -15,4 +18,16 @@ function boomErrorHandler(err, req, res, next){
   }
 }
 
-export { logError, errorHandler, boomErrorHandler }
+function ormErrorHandler(err, req, res, next){
+  if(err instanceof ValidationError){
+    res.status(409).json({
+      statusCode: 409,
+      message: err.name,
+      errors: err.errors
+    })
+  }else{
+    next(err)
+  }
+}
+
+export { logError, errorHandler, boomErrorHandler, ormErrorHandler }

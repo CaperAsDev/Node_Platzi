@@ -1,7 +1,7 @@
 import express from 'express'
 import routerApi from './routes/index.js'
 import cors from 'cors'
-import { errorHandler, logError, boomErrorHandler } from './middlewares/error.handler.js'
+import { errorHandler, logError, boomErrorHandler, ormErrorHandler } from './middlewares/error.handler.js'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,7 +15,8 @@ app.get('/', (req, res) => {
 routerApi(app)
 
 app.use(logError)
-app.use(boomErrorHandler)
+app.use(boomErrorHandler) // Errores de validacion Joi
+app.use(ormErrorHandler) // Errores de sequelize
 app.use(errorHandler)
 
 app.listen(port, ()=> {

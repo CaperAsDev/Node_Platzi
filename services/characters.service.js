@@ -1,53 +1,35 @@
 import  boom  from "@hapi/boom";
-import client from '../libs/postgres.js'
-import sequelize from "../libs/sequelize.js";
+import { models }  from "../libs/sequelize.postgres.js";
+
 
 class CharacterService {
   constructor(){
-    this.pool = client
-    this.pool.on('error', (err)=> console.log(err))
-    this.characters = [
-      {
-        id:1,
-        name: 'Amalthea',
-        nickname: 'Ammy',
-        age: 2000,
-        favoriteColor: 'Purple',
-        heigth: 168
-      },
-      {
-        id:2,
-        name: 'Samantha',
-        nickname: 'Sammy',
-        age: 500,
-        favoriteColor: 'Wine',
-        heigth: 173
-      }
-    ]
+    this.characters = models.Character
   }
 
   async findAll(){
-    const data = await sequelize.query('SELECT * FROM tasks')
-    console.log(data)
-    return data
+    const data1 = await this.characters.findAll();
+    console.log(data1);
+    return data1
   }
 
-  findOne({id}){
+  async findOne({id}){
     const character = this.characters.find((ch)=>ch.id === id)
     if(!character){
       throw boom.notFound('character not found')
     }
   }
 
-  create(){
+  async create(data){
+    const newCharacter = await this.characters.create(data)
+    return newCharacter
+  }
+
+  async update(){
 
   }
 
-  update(){
-
-  }
-
-  delete(){
+  async delete(){
 
   }
 }

@@ -1,5 +1,7 @@
 import express from 'express'
 import CharacterService from '../services/characters.service.js'
+import validatorHandler from '../middlewares/validator.handler.js';
+import { createCharacterSchema, getCharacterSchema } from '../schema/character.schema.js';
 
 const router = express.Router()
 const service = new CharacterService();
@@ -14,25 +16,32 @@ router.get('/', async (req, res, next)=>{
   }
 })
 
-router.get('/:id', (req, res, next)=>{
-  const { id } = req.params
+router.get('/:id',
+  validatorHandler(getCharacterSchema, 'params'),
+  async (req, res, next)=>{
+    const { id } = req.params
 
-  try {
-    const characters = service.findOne({id})
-    res.json(characters)
+    try {
+      const character = await service.findOne({id})
+      res.json(character)
 
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.post('/', (req, res)=>{
-  const data = req.body
-  res.status(201).json(
-    {
-      created: true,
-      data
+    } catch (error) {
+      next(error)
     }
-  )
 })
+
+router.post('/',
+  validatorHandler(createCharacterSchema, 'body'),
+  async (req, res, next)=>{
+    const data = req.body
+    console.log('DATA Router: ', data);
+    try {
+      const newCharacter =  await service.create(data)
+      res.status(201).json(newCharacter)
+
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 export default router
