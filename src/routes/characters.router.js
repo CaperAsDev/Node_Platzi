@@ -2,6 +2,8 @@ import express from 'express'
 import CharacterService from '../services/characters.service.js'
 import validatorHandler from '../middlewares/validator.handler.js';
 import { createCharacterSchema, getCharacterSchema } from '../schema/character.schema.js';
+import passport from 'passport';
+import { checkRoles } from '../middlewares/auth.handler.js';
 
 const router = express.Router()
 const service = new CharacterService();
@@ -31,6 +33,8 @@ router.get('/:id',
 })
 
 router.post('/',
+  passport.authenticate('jwt',{session: false}),
+  checkRoles(['admin']),
   validatorHandler(createCharacterSchema, 'body'),
   async (req, res, next)=>{
     const data = req.body

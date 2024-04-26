@@ -1,4 +1,6 @@
 import { Model, DataTypes } from "sequelize";
+import { ELEMENTAL_TABLE } from "./elemental.model";
+
 
 const CHARACTER_TABLE = "characters";
 
@@ -31,11 +33,29 @@ const CharacterSchema = {
     allowNull: true,
     type: DataTypes.STRING,
   },
+  favoriteFood: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  ElementalId: {
+    field: 'elemental_id',
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    references: {
+      model: ELEMENTAL_TABLE,
+      key: 'id'
+    }
+  },
+  type: {
+    allowNull: true,
+    type: DataTypes.STRING,
+    unique: true
+  }
 }
 
 class Character extends Model {
-  static associate(){
-    // models
+  static associate(models){
+    this.belongsTo(models.User, {as: 'user'})
   }
 
   static config(sequelize){
