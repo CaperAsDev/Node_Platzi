@@ -1,0 +1,64 @@
+type Query {
+  character(id: ID!): Character
+  characters: [Character]
+}
+
+type Mutation {
+  login(email: String!, password: String!): AuthResponse
+  addCharacter(dto: CreateCharacterDto!): Character # May return a null value if a error is encountered
+  updateCharacter(id: ID!, dto: UpdateCharacterDto!): Character # dto required so the cliend sends something
+  deleteCharacter(id: ID!): ID
+}
+
+type Character {
+  id: ID!
+  name: CharacterNameType!
+  age: Int!
+  nickname: String!
+  favoriteColor: String!
+  race: String!
+  elemental: Elemental!
+}
+
+input CreateCharacterDto {
+  name: CharacterNameType!
+  age: Int!
+  nickname: String!
+  favoriteColor: String
+  race: String!
+  favoriteFood: String
+  ElementalId: ID!
+}
+
+# Update input: no required values
+input UpdateCharacterDto {
+  name: CharacterNameType
+  age: Int
+  nickname: String
+  favoriteColor: String
+  race: String
+  favoriteFood: String
+  ElementalId: ID
+}
+
+type AuthResponse {
+  access_token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  password: String!
+  recoveryToken: String!
+  email: String!
+  role: String!
+}
+
+type Elemental {
+  id: ID!
+  name: String!
+  description: String!
+}
+
+scalar CharacterNameType

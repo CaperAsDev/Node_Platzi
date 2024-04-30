@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { ELEMENTAL_TABLE } from "./elemental.model";
+import { ELEMENTAL_TABLE } from "./elemental.model.js";
 
 
 const CHARACTER_TABLE = "characters";
@@ -55,7 +55,8 @@ const CharacterSchema = {
 
 class Character extends Model {
   static associate(models){
-    this.belongsTo(models.User, {as: 'user'})
+    this.belongsTo(models.Elemental)
+    this.belongsToMany(models.Account, {through: models.AccountCharacter})
   }
 
   static config(sequelize){

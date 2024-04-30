@@ -17,20 +17,22 @@ const ElementalSchema = {
   description: {
     allowNull: false,
     type: DataTypes.STRING,
-  },
-  counterBy: {
-    allowNull: false,
-    type: DataTypes.STRING,
-  },
-  counterFor: {
-    allowNull: false,
-    type: DataTypes.STRING,
   }
 }
 
 class Elemental extends Model {
   static associate(models){
-    // this.belongsTo(models.User, {as: 'user'})
+    this.hasMany(models.Character, {foreignKey: 'ElementalId'})
+    this.hasMany(models.AccountCharacterAbility, {foreignKey: 'ElementalId'})
+
+    this.hasOne(models.ElementalSynergy,{
+      as: 'CounterFor',
+      foreignKey:'counterFor'
+    })
+    this.hasOne(models.ElementalSynergy,{
+      as: 'ElementalId',
+      foreignKey:'ElementalId'
+    })
   }
 
   static config(sequelize){

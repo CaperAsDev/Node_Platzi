@@ -1,5 +1,5 @@
 import  boom  from "@hapi/boom";
-import { models }  from "../libs/sequelize.postgres.js";
+import { models }  from "../db/sequelize.js";
 
 
 class CharacterService {
@@ -9,27 +9,28 @@ class CharacterService {
 
   async findAll(){
     const data1 = await this.characters.findAll();
-    console.log(data1);
     return data1
   }
 
   async findOne({id}){
-    const character = this.characters.find((ch)=>ch.id === id)
+    const character = this.characters.findByPk(id)
     if(!character){
       throw boom.notFound('character not found')
     }
+    return character
   }
 
   async create(data){
+    console.log(data);
     const newCharacter = await this.characters.create(data)
     return newCharacter
   }
 
-  async update(){
+  async update(id, data){
 
   }
 
-  async delete(){
+  async delete(id){
 
   }
 }

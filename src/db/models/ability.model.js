@@ -1,5 +1,4 @@
 import { Model, DataTypes } from "sequelize";
-import { ELEMENTAL_TABLE } from "./elemental.model";
 
 const ABILITY_TABLE = "abilities";
 
@@ -14,15 +13,6 @@ const AbilitySchema = {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true
-  },
-  ElementalId: {
-    field: 'elemental_id',
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    references: {
-      model: ELEMENTAL_TABLE,
-      key: 'id'
-    }
   },
   type: {
     allowNull: true,
@@ -45,7 +35,10 @@ const AbilitySchema = {
 
 class Ability extends Model {
   static associate(models){
-    this.hasMany(models.Element, {as: 'element'})
+    this.belongsToMany(models.AccountCharacter, {
+      through: models.AccountCharacterAbility,
+      foreignKey: 'AbilityId'
+    })
   }
 
   static config(sequelize){

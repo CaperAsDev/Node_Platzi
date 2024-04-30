@@ -1,7 +1,7 @@
 import { Model, DataTypes } from "sequelize";
-import { ACCOUNT_CHARACTER_TABLE } from "./account-character.model";
-import { ABILITY_TABLE } from "./ability.model";
-import { ELEMENTAL_TABLE } from "./elemental.model";
+import { ACCOUNT_CHARACTER_TABLE } from "./account-character.model.js";
+import { ABILITY_TABLE } from "./ability.model.js";
+import { ELEMENTAL_TABLE } from "./elemental.model.js";
 
 const ACCOUNT_CHARACTER_ABILITY_TABLE = "account_characters_abilities";
 
@@ -51,6 +51,7 @@ const AccountCharacterAbilitySchema = {
 
 class AccountCharacterAbility extends Model {
   static associate(models){
+    this.belongsTo(models.Elemental)
     // this.hasMany(models.Element, {as: 'element'})
   }
 

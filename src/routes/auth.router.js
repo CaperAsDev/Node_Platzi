@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import AuthService from '../services/auth.service';
+import AuthService from '../services/auth.service.js';
 
 const service = new AuthService
 const router = express.Router();

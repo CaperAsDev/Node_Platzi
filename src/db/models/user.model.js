@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { hashPassword } from "../../../pass-hash";
+import  bcrypt from 'bcrypt';
 
 const USER_TABLE = "users";
 
@@ -18,8 +18,8 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
     async set (value) {
-      const password = await hashPassword(value)
-      this.setDataValue('password', password)
+      const hash = await bcrypt.hash(value, 10);
+      this.setDataValue('password', hash)
     }
   },
   recoveryToken: {
@@ -41,8 +41,11 @@ const UserSchema = {
 }
 
 class User extends Model {
-  static associate(){
-    // models
+  static associate(models){
+    this.hasMany(models.Account, {
+      as: 'account',
+      foreignKey: 'UserId'
+    })
   }
 
   static config(sequelize){

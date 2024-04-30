@@ -131,7 +131,198 @@ There could be an access token that expires after 20 minutes and a Refresh token
 
 [app passwords](https://support.google.com/accounts/answer/185833?hl=es-419&sjid=5607186331530498619-NA)
 
+# [Graphql](https://graphql.org/learn/)
+
+## [Graphql Shield](https://the-guild.dev/graphql/shield/docs): for authentication and authorization
+
+## [graphql-passport](https://www.npmjs.com/package/graphql-passport): integration with passport
+
+## [graphql-scalars](https://the-guild.dev/graphql/scalars/docs): type-safe schemas for graphql
+
+Can define new types at resolvers index.js, then add it as a scalar in schema.graphql and use it as a type.
+
+- Graphql needs [Apolo Server](https://www.apollographql.com/docs/apollo-server/getting-started) to make it work.
+
+## Scalar types
+This are the types of data that we can assign to the return value or the arg value in a Query:
+
+- Int! => not null
+- Float => float optional, can be null
+- [String] => An optional array of strings
+- [String]! => can't be null and must be an array of strings or a null value
+- [String!]! => can't be null and must be an array of strings without null values
+- Boolean! => not null, must be a boolean
+- ID
+
+If we add a **!** at the end of the type, now this argument or value can't be null, without the mark it will be optional.
+
+If we wrap a type with **[]**, now this means it will receive as argument or return as value an array of the type inside the marks.
+
+## Object types
+
+We can define a type of data with **type** + **TypeName** and the structure:
+- Query, Mutation, Subscription, String, Boolean, ID, Int, Float are reserved names that can't be used as identifiers for the custom types.
+
+- We can also use object types to define the type a property in other query:
+
+```
+type Query {
+  me: User
+}
+ 
+type User {
+  id: ID
+  name: String
+}
+```
+
+- With Object types we can define structured data, and to query this object we need to be explicit about what subfields or properties we want to be returned:
+
+```
+{
+  User: {
+    name
+  }
+}
+```
+In the previous example will be returned only the name, not the id or other properties.
+
+## Importing types from other files
+
+To do so we need to:
+
+- Install @graphql-tools/load-files
+- import { loadFiles } from "@graphql-tools/load-files";
+- typeDefs: await loadFiles('./src/**/*.graphql'),
+
+## Dynamic Nesting
+
+What usually happens when requesting related models is that in the service there is an include.
+In GraphQL we want to include relationships dynamically, so we get only what is required by the client.
+
+- Make the relationship a resolver:
+
+- treat a field as a resolver means that we define in the resolvers index file a property:
+```
+const resolvers = {
+  Query: {
+    character: getCharacter,
+    characters: getCharacters
+  },
+  Mutation: {
+    addCharacter,
+    updateCharacter,
+    login
+  },
+  CharacterNameType,
+  Character: {
+    element: () => []
+  }
+}
+```
+- Take as a example the Character object, this represents the owner of the relationship.
+- element will be the field treated as a resolver, in this case when Character is requested with the nested object "element" it will check this resolver to solve that so returns an empty array "[]".
+- Element resolver will be called just when that field is requested.
+- Create a resolver that will be called when the element field is requested:
+```
+{
+  ...
+  Character: {
+    elemental: getElementalByCharacter
+  }
+}
+
+```
+- Resolver will receive in its first argument the context or instance that is requesting its relationship:
+
+```
+Character {
+  dataValues: {
+    id: 4,
+    name: 'Samantha',
+    age: 500,
+    nickname: 'Sammy',
+    favoriteColor: 'Wine',
+    race: 'Vampire',
+    favoriteFood: 'Fish',
+    ElementalId: 1,
+    type: null
+  },
+  _previousDataValues: {
+    id: 4,
+    ...
+  }
+  ...
+}
+
+```
+- With that information we just have to create a service in the field requested service to solve that relation in the resolver:
+
+```
+export const getElementalByCharacter = async (parent) => {
+  const element = await service.getElementalByCharacter(parent.dataValues.id)
+  return element
+}
+```
+- The service method:
+```
+async getElementalByCharacter(id){
+  const element = await models.Elemental.findOne({where: {id: id}})
+  return element
+}
+```
+This way we request just the information needed, in the api Rest we request always that relations.
+
+# Request data from frontend:
+Can use:
+- Axios & React Query
+**Or**
+- Apolo/client: better for graphql
+
+- Sin dependencias:
+```
+const query = `
+  query{
+    avos{
+      id
+      image
+      name
+      createdAt
+      sku
+      price
+      attributes {
+        description
+        taste
+        shape
+        hardiness
+      }
+    }
+  }
+`
+
+fetch(APIURL/graphql, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    query
+  })
+})
+```
+ # Frontend types from graphql
+
+ - Install @graphql-codegen/cli
+ - Run graphql-codegen init and check documentation for next steps.
+
+ [apollo docs](https://www.apollographql.com/blog/using-apollo-client-with-next-js-13-releasing-an-official-library-to-support-the-app-router#when-should-you-use-client-components-vs-server-components)
+ [Graphql code generator](https://graphql.wtf/episodes/67-the-new-graphql-code-generator-client-preset)
+
+# [Types with node](https://typestrong.org/ts-node/)
+
 # Repos
 
 - [curso-nodejs-auth](https://github.com/platzi/curso-nodejs-auth/tree/13-step)
 - [curso-nodejs-graphql](https://github.com/platzi/curso-nodejs-graphql/tree/step-1-init)
+- [platzi-graphql-fullstack](https://github.com/jonalvarezz/platzi-graphql-fullstack/tree/main)
+

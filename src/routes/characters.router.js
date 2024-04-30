@@ -1,7 +1,7 @@
 import express from 'express'
 import CharacterService from '../services/characters.service.js'
 import validatorHandler from '../middlewares/validator.handler.js';
-import { createCharacterSchema, getCharacterSchema } from '../schema/character.schema.js';
+import { createCharacterSchema, getCharacterSchema } from '../dtos/character.dto.js';
 import passport from 'passport';
 import { checkRoles } from '../middlewares/auth.handler.js';
 

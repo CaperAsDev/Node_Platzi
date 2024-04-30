@@ -1,12 +1,12 @@
 import { Sequelize } from "sequelize";
 import { config } from "../config/config.js"
-import setupModels from "../db/models/index.js";
+import setupModels from "./models/index.js";
 
 let URI = ''
 
 const options = {
   dialect: 'postgres',
-  logging: !config.isProd,
+  logging: config.isProd,
 }
 
 if (config.isProd) {
@@ -27,5 +27,5 @@ export const sequelize = new Sequelize(URI, options)
 
 setupModels(sequelize)
 
-// await sequelize.sync({alter: true})
+await sequelize.sync({alter: true})
 export const models = sequelize.models

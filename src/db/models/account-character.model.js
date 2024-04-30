@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import { CHARACTER_TABLE } from "./character.model";
-import { ACCOUNT_TABLE } from "./account.model";
+import { CHARACTER_TABLE } from "./character.model.js";
+import { ACCOUNT_TABLE } from "./account.model.js";
 
 const ACCOUNT_CHARACTER_TABLE = "account_characters";
 
@@ -38,6 +38,12 @@ const AccountCharacterSchema = {
 
 class AccountCharacter extends Model {
   static associate(models){
+    this.belongsToMany(models.Ability, {
+      through: models.AccountCharacterAbility,
+      as: 'abilities',
+      foreignKey: 'AccountCharacterId'
+    })
+
     // this.hasMany(models.Element, {as: 'element'})
   }
 

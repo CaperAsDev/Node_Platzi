@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import { ELEMENTAL_TABLE } from "./elemental.model";
-import { USER_TABLE } from "./user.model";
+import { ELEMENTAL_TABLE } from "./elemental.model.js";
+import { USER_TABLE } from "./user.model.js";
 
 const ACCOUNT_TABLE = "accounts";
 
@@ -36,8 +36,9 @@ const AccountSchema = {
 }
 
 class Account extends Model {
-  static associate(){
-    // models
+  static associate(models){
+    this.belongsTo(models.User)
+    this.belongsToMany(models.Character, {through: models.AccountCharacter})
   }
 
   static config(sequelize){

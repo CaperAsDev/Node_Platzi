@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { ELEMENTAL_TABLE } from "./elemental.model";
+import { ELEMENTAL_TABLE } from "./elemental.model.js";
 
 const ELEMENTAL_SYNERGY_TABLE = "elementals_synergy";
 
@@ -12,15 +12,6 @@ const ElementalSynergySchema = {
   },
   ElementalId: {
     field: 'elemental_id',
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    references: {
-      model: ELEMENTAL_TABLE,
-      key: 'id'
-    }
-  },
-  counterBy: {
-    field: 'counter_by_id',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
@@ -41,7 +32,7 @@ const ElementalSynergySchema = {
 
 class ElementalSynergy extends Model {
   static associate(models){
-    // this.belongsTo(models.User, {as: 'user'})
+    this.belongsTo(models.Elemental)
   }
 
   static config(sequelize){
